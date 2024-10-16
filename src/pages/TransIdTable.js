@@ -121,7 +121,7 @@ const fetchImgData = async (transId) => {
           <Card
             bordered={false}
             className="criclebox tablespace mb-24"
-            title="User Details"
+            title="Transaction Details"
           >
             <div className="table-responsive">
               <Table
