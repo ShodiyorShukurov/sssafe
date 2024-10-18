@@ -2,6 +2,7 @@ import { Row, Col, Card, Table, Button, Modal } from "antd";
 import { useParams } from "react-router-dom";
 import React, { useState } from "react";
 import Api from "../api";
+import Main from "../components/layout/Main";
 
 const columns = (showImage) => [
   {
@@ -100,7 +101,7 @@ const fetchImgData = async (transId) => {
   }, []);
 
   if (!transIdData) {
-    return <div>Transaction not found</div>;
+    return <Main>Transaction not found</Main>;
   }
 
 
@@ -115,36 +116,38 @@ const fetchImgData = async (transId) => {
   };
 
   return (
-    <div className="tabled">
-      <Row gutter={[24, 0]}>
-        <Col xs="24" xl={24}>
-          <Card
-            bordered={false}
-            className="criclebox tablespace mb-24"
-            title="Transaction Details"
-          >
-            <div className="table-responsive">
-              <Table
-                columns={columns(showImage)}
-                dataSource={[transIdData]}
-                pagination={false}
-                className="ant-border-space"
-              />
-            </div>
-          </Card>
-        </Col>
-      </Row>
+    <Main>
+      <div className="tabled">
+        <Row gutter={[24, 0]}>
+          <Col xs="24" xl={24}>
+            <Card
+              bordered={false}
+              className="criclebox tablespace mb-24"
+              title="Transaction Details"
+            >
+              <div className="table-responsive">
+                <Table
+                  columns={columns(showImage)}
+                  dataSource={[transIdData]}
+                  pagination={false}
+                  className="ant-border-space"
+                />
+              </div>
+            </Card>
+          </Col>
+        </Row>
 
-      {/* Rasm ko'rsatish uchun modal */}
-      <Modal
-        title="Foydalanuvchi Rasm"
-        open={visible}
-        onCancel={handleCancel}
-        footer={null}
-      >
-        <img alt="User" style={{ width: "100%" }} src={imageUrl} />
-      </Modal>
-    </div>
+        {/* Rasm ko'rsatish uchun modal */}
+        <Modal
+          title="Foydalanuvchi Rasm"
+          open={visible}
+          onCancel={handleCancel}
+          footer={null}
+        >
+          <img alt="User" style={{ width: "200px" }} src={imageUrl} />
+        </Modal>
+      </div>
+    </Main>
   );
 }
 

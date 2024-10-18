@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Row, Col, Card, Table, Button, Input, message } from "antd";
 import useUserTransaction from "../hooks/UseUserTransaction";
+import Main from "../components/layout/Main";
 
 // table code start
 const columns = [
@@ -66,7 +67,7 @@ function UserIdTransaction() {
      fetchTransactionData(searchId);
    };
   return (
-    <>
+    <Main>
       <div className="tabled">
         <Row gutter={[24, 0]}>
           <Col xs="24" xl={24}>
@@ -99,7 +100,7 @@ function UserIdTransaction() {
           </Col>
         </Row>
       </div>
-    </>
+    </Main>
   );
 }
 

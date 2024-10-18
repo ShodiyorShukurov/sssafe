@@ -1,6 +1,7 @@
 import { Row, Col, Card, Table, Button } from "antd";
 import useTransactionList from "../hooks/UseTransactionList";
 import { Link } from "react-router-dom";
+import Main from "../components/layout/Main";
 
 const columns = [
   {
@@ -68,7 +69,7 @@ function TransactionListTable() {
   const { transactionListData } = useTransactionList();
 
   return (
-    <>
+    <Main>
       <div className="tabled">
         <Row gutter={[24, 0]}>
           <Col xs="24" xl={24}>
@@ -89,7 +90,7 @@ function TransactionListTable() {
           </Col>
         </Row>
       </div>
-    </>
+    </Main>
   );
 }
 

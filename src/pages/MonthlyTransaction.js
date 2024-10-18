@@ -1,6 +1,7 @@
 import { Row, Col, Card, Table, Input, Button, Form, message } from "antd";
 import React, { useState } from "react";
 import useMonthlyTransaction from "../hooks/UseMonthlyTransaction";
+import Main from "../components/layout/Main";
 
 const columns = [
   {
@@ -69,95 +70,98 @@ function MonthlyTransaction() {
       : 0;
 
   return (
-    <div className="tabled">
-      <Row gutter={[24, 0]}>
-        <Col xs="24" xl={24}>
-          <Card
-            bordered={false}
-            className="criclebox tablespace mb-24"
-            title="Monthly Transaction List"
-          >
-            {/* Form for inputting month and year */}
-            <Form
-              layout="inline"
-              style={{ marginBottom: "16px", padding: "20px" }}
+    <Main>
+      <div className="tabled">
+        <Row gutter={[24, 0]}>
+          <Col xs="24" xl={24}>
+            <Card
+              bordered={false}
+              className="criclebox tablespace mb-24"
+              title="Monthly Transaction List"
             >
-              <Form.Item label="Month">
-                <Input
-                  type="number"
-                  placeholder="MM"
-                  value={month}
-                  maxLength={2}
-                  min={1}
-                  max={12}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (value.length <= 2) setMonth(value);
-                  }}
-                />
-              </Form.Item>
-              <Form.Item label="Year">
-                <Input
-                  type="number"
-                  placeholder="YYYY"
-                  value={year}
-                  maxLength={4}
-                  min={1000}
-                  max={9999}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (value.length <= 4) setYear(value);
-                  }}
-                />
-              </Form.Item>
-              <Form.Item>
-                <Button type="primary" onClick={handleFetch}>
-                  Search
-                </Button>
-              </Form.Item>
-            </Form>
-
-            {/* Show message if no data */}
-            {!transactionMonthlyData || transactionMonthlyData.length === 0 ? (
-              <div
-                style={{
-                  marginBottom: "16px",
-                  padding: "20px",
-                  fontSize: "18px",
-                }}
+              {/* Form for inputting month and year */}
+              <Form
+                layout="inline"
+                style={{ marginBottom: "16px", padding: "20px" }}
               >
-                No information found
-              </div>
-            ) : (
-              <>
-                {/* Total amount */}
+                <Form.Item label="Month">
+                  <Input
+                    type="number"
+                    placeholder="MM"
+                    value={month}
+                    maxLength={2}
+                    min={1}
+                    max={12}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value.length <= 2) setMonth(value);
+                    }}
+                  />
+                </Form.Item>
+                <Form.Item label="Year">
+                  <Input
+                    type="number"
+                    placeholder="YYYY"
+                    value={year}
+                    maxLength={4}
+                    min={1000}
+                    max={9999}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value.length <= 4) setYear(value);
+                    }}
+                  />
+                </Form.Item>
+                <Form.Item>
+                  <Button type="primary" onClick={handleFetch}>
+                    Search
+                  </Button>
+                </Form.Item>
+              </Form>
+
+              {/* Show message if no data */}
+              {!transactionMonthlyData ||
+              transactionMonthlyData.length === 0 ? (
                 <div
                   style={{
                     marginBottom: "16px",
+                    padding: "20px",
                     fontSize: "18px",
-                    fontWeight: "bold",
-                    color: "#14A44D",
-                    padding: "0 20px",
                   }}
                 >
-                  Total Amount: {totalAmount.toLocaleString()}
+                  No information found
                 </div>
+              ) : (
+                <>
+                  {/* Total amount */}
+                  <div
+                    style={{
+                      marginBottom: "16px",
+                      fontSize: "18px",
+                      fontWeight: "bold",
+                      color: "#14A44D",
+                      padding: "0 20px",
+                    }}
+                  >
+                    Total Amount: {totalAmount.toLocaleString()}
+                  </div>
 
-                {/* Table */}
-                <div className="table-responsive">
-                  <Table
-                    columns={columns}
-                    dataSource={transactionMonthlyData}
-                    pagination={false}
-                    className="ant-border-space"
-                  />
-                </div>
-              </>
-            )}
-          </Card>
-        </Col>
-      </Row>
-    </div>
+                  {/* Table */}
+                  <div className="table-responsive">
+                    <Table
+                      columns={columns}
+                      dataSource={transactionMonthlyData}
+                      pagination={false}
+                      className="ant-border-space"
+                    />
+                  </div>
+                </>
+              )}
+            </Card>
+          </Col>
+        </Row>
+      </div>
+    </Main>
   );
 }
 

@@ -2,6 +2,7 @@ import { Row, Col, Card, Table, Button } from "antd";
 import { useParams } from "react-router-dom";
 import React, { useState } from "react";
 import Api from "../api";
+import Main from "../components/layout/Main";
 
 const columns = () => [
   {
@@ -72,26 +73,28 @@ function UserTable() {
   }
 
   return (
-    <div className="tabled">
-      <Row gutter={[24, 0]}>
-        <Col xs="24" xl={24}>
-          <Card
-            bordered={false}
-            className="criclebox tablespace mb-24"
-            title="User Details"
-          >
-            <div className="table-responsive">
-              <Table
-                columns={columns()} // Call the columns function
-                dataSource={[userData]}
-                pagination={false}
-                className="ant-border-space"
-              />
-            </div>
-          </Card>
-        </Col>
-      </Row>
-    </div>
+    <Main>
+      <div className="tabled">
+        <Row gutter={[24, 0]}>
+          <Col xs="24" xl={24}>
+            <Card
+              bordered={false}
+              className="criclebox tablespace mb-24"
+              title="User Details"
+            >
+              <div className="table-responsive">
+                <Table
+                  columns={columns()} // Call the columns function
+                  dataSource={[userData]}
+                  pagination={false}
+                  className="ant-border-space"
+                />
+              </div>
+            </Card>
+          </Col>
+        </Row>
+      </div>
+    </Main>
   );
 }
 

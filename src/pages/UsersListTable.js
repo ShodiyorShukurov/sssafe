@@ -1,6 +1,7 @@
 import { Row, Col, Card, Table, Button } from "antd";
 import { Link } from "react-router-dom";
 import useUserList from "../hooks/UseUserList";
+import Main from "../components/layout/Main";
 
 const columns = [
   {
@@ -68,26 +69,28 @@ function UsersListTable() {
   const { userListData } = useUserList(); 
 
   return (
-    <div className="tabled">
-      <Row gutter={[24, 0]}>
-        <Col xs="24" xl={24}>
-          <Card
-            bordered={false}
-            className="criclebox tablespace mb-24"
-            title="User List"
-          >
-            <div className="table-responsive">
-              <Table
-                columns={columns}
-                dataSource={userListData} 
-                pagination={false}
-                className="ant-border-space"
-              />
-            </div>
-          </Card>
-        </Col>
-      </Row>
-    </div>
+    <Main>
+      <div className="tabled">
+        <Row gutter={[24, 0]}>
+          <Col xs="24" xl={24}>
+            <Card
+              bordered={false}
+              className="criclebox tablespace mb-24"
+              title="User List"
+            >
+              <div className="table-responsive">
+                <Table
+                  columns={columns}
+                  dataSource={userListData}
+                  pagination={false}
+                  className="ant-border-space"
+                />
+              </div>
+            </Card>
+          </Col>
+        </Row>
+      </div>
+    </Main>
   );
 }
 
