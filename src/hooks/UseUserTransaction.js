@@ -8,8 +8,8 @@ const useUserTransaction = () => {
     if (!userId) return; 
     try {
       console.log(userId)
-      const res = await Api.get(`/transaction/read-all-by-user-id/${userId}`);
-      setTransactionListData(res.data);
+      const res = await Api.get(`/transactions/user?user_id=${userId}`);
+      setTransactionListData(res.data.data);
     } catch (error) {
       console.log(error);
       throw error;

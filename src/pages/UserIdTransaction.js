@@ -13,14 +13,14 @@ const columns = [
   },
   {
     title: "Transaction ID",
-    dataIndex: "transId",
-    key: "transId",
+    dataIndex: "transaction_id",
+    key: "transaction_id",
     align: "center",
   },
   {
     title: "User ID",
-    dataIndex: "userId",
-    key: "userId",
+    dataIndex: "user_id",
+    key: "user_id",
     align: "center",
   },
   {
@@ -28,16 +28,25 @@ const columns = [
     dataIndex: "amount",
     key: "amount",
     align: "center",
+    render: (amount) => `${Number(amount / 100).toFixed(2)}`,
   },
   {
-    title: "Pay At",
-    dataIndex: "payAt",
-    key: "payAt",
+    title: "Success Transaction ID",
+    dataIndex: "success_trans_id",
+    key: "success_trans_id",
     align: "center",
-    render: (payAt) => {
-      const date = new Date(...payAt); // payAt arrayidan sana olish
-      return <span>{date.toLocaleDateString()}</span>;
-    },
+  },
+
+  {
+    title: "Check ",
+    dataIndex: "ofd_url",
+    key: "ofd_url",
+    align: "center",
+    render: (_, record) => (
+      <a href={record?.ofd_url} target="_blanck">
+        <Button type="link">See check</Button>
+      </a>
+    ),
   },
   {
     title: "Method",
@@ -45,27 +54,19 @@ const columns = [
     key: "method",
     align: "center",
   },
-  {
-    title: "Success Transaction ID",
-    dataIndex: "successTransId",
-    key: "successTransId",
-    align: "center",
-  },
 ];
 
-
 function UserIdTransaction() {
- const [searchId, setSearchId] = useState("");
- const { transactionListData, fetchTransactionData } = useUserTransaction();
- console.log(transactionListData)
+  const [searchId, setSearchId] = useState("");
+  const { transactionListData, fetchTransactionData } = useUserTransaction();
 
-   const onSearch = () => {
-     if (!searchId) {
-       message.warning("ID kiritishingiz shart!"); 
-       return;
-     }
-     fetchTransactionData(searchId);
-   };
+  const onSearch = () => {
+    if (!searchId) {
+      message.warning("ID kiritishingiz shart!");
+      return;
+    }
+    fetchTransactionData(searchId);
+  };
   return (
     <Main>
       <div className="tabled">
@@ -76,15 +77,23 @@ function UserIdTransaction() {
               className="criclebox tablespace mb-24"
               title="User Transaction List"
             >
-             
               <Input
                 placeholder="Enter ID"
                 value={searchId}
                 onChange={(e) => setSearchId(e.target.value)}
                 onPressEnter={onSearch}
-                style={{ marginBottom: "16px", width: "300px", marginLeft: "20px", marginTop: "20px" }}
+                style={{
+                  marginBottom: "16px",
+                  width: "300px",
+                  marginLeft: "20px",
+                  marginTop: "20px",
+                }}
               />
-              <Button onClick={onSearch} type="primary" style={{marginLeft: "10px" }}>
+              <Button
+                onClick={onSearch}
+                type="primary"
+                style={{ marginLeft: "10px" }}
+              >
                 Search
               </Button>
 

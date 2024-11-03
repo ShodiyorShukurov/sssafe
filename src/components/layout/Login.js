@@ -1,7 +1,8 @@
 import { Form, Input, Button, notification } from "antd";
 import { useNavigate } from "react-router-dom";
-import { API_LOGIN, API_PASSWORD, } from "../../utils/constants";
 import { useState } from "react";
+import Api from "../../api";
+import { API_TOKEN } from "../../utils/constants";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -9,18 +10,17 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (values) => {
-    console.log(values)
-    if(values.text && values.password){
-        localStorage.setItem(API_LOGIN, values.text)
-        localStorage.setItem(API_PASSWORD, values.password)
-    }
-
-    if (
-      localStorage.getItem(API_LOGIN) === "admin" &&
-      localStorage.getItem(API_PASSWORD) === "12563Aas@"
-    ) {
-      navigate("/user-list");
-    }else {
+    try {
+      const res = await Api.post("/admin/login", {
+        admin_email: values.admin_email,
+        admin_password: values.admin_password,
+      });
+      if (res.data.token) {
+        localStorage.setItem(API_TOKEN, res.data.token);
+        navigate('/user-list')
+      }
+    } catch (error) {
+      console.log(error);
       notification.error({
         message: "Error",
         description: "Login yoki parol noto'g'ri",
@@ -54,16 +54,16 @@ const LoginPage = () => {
           autoComplete="off"
         >
           <Form.Item
-            label="Login"
-            name="text"
-            rules={[{ required: true, message: "Loginni kiriting" }]}
+            label="Email"
+            name="admin_email"
+            rules={[{ required: true, message: "Email kiriting" }]}
           >
             <Input placeholder="Login" />
           </Form.Item>
 
           <Form.Item
             label="Password"
-            name="password"
+            name="admin_password"
             rules={[{ required: true, message: "Parolni kiriting" }]}
           >
             <Input.Password placeholder="Password" />

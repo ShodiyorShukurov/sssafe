@@ -2,12 +2,14 @@ import React from "react";
 import Api from "../api";
 
 const useTransactionList= () => {
-  const [transactionListData, setTransactionListData] = React.useState();
+  const [transactionListData, setTransactionListData] = React.useState([]);
+  const [next, setNext] = React.useState(1);
+  const [addData, setAddData] = React.useState(false)
 
   const fetchTransactionData = async () => {
     try {
-      const res = await Api.get("/transaction/read-all");
-      setTransactionListData(res.data);
+      const res = await Api.get(`/transactions/list?limit=50&page=${next}`);
+      setTransactionListData(res.data.data);
     } catch (error) {
       console.log(error);
       throw error;
@@ -16,10 +18,13 @@ const useTransactionList= () => {
 
   React.useEffect(() => {
     fetchTransactionData();
-  }, []);
+  }, [next, addData]);
 
   return {
     transactionListData,
+    setNext,
+    next,
+    setAddData,
   };
 };
 

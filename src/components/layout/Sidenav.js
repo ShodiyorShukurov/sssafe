@@ -93,6 +93,20 @@ function Sidenav({ color }) {
             <span className="label">User Id Transaction</span>
           </NavLink>
         </Menu.Item>
+
+        <Menu.Item key="5">
+          <NavLink to="/price">
+            <span
+              className="icon"
+              style={{
+                background: page === "tables" ? color : "",
+              }}
+            >
+              {tables}
+            </span>
+            <span className="label">Price</span>
+          </NavLink>
+        </Menu.Item>
       </Menu>
     </>
   );

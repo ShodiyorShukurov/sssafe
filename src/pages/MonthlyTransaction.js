@@ -1,4 +1,14 @@
-import { Row, Col, Card, Table, Input, Button, Form, message } from "antd";
+import {
+  Row,
+  Col,
+  Card,
+  Table,
+  Input,
+  Button,
+  Form,
+  message,
+  Space,
+} from "antd";
 import React, { useState } from "react";
 import useMonthlyTransaction from "../hooks/UseMonthlyTransaction";
 import Main from "../components/layout/Main";
@@ -12,14 +22,14 @@ const columns = [
   },
   {
     title: "Transaction ID",
-    dataIndex: "transId",
-    key: "transId",
+    dataIndex: "transaction_id",
+    key: "transaction_id",
     align: "center",
   },
   {
     title: "User ID",
-    dataIndex: "userId",
-    key: "userId",
+    dataIndex: "user_id",
+    key: "user_id",
     align: "center",
   },
   {
@@ -27,16 +37,24 @@ const columns = [
     dataIndex: "amount",
     key: "amount",
     align: "center",
+    render: (amount) => `${Number(amount / 100).toFixed(2)}`,
   },
   {
-    title: "Pay At",
-    dataIndex: "payAt",
-    key: "payAt",
+    title: "Success Transaction Id",
+    dataIndex: "success_trans_id",
+    key: "success_trans_id",
     align: "center",
-    render: (payAt) => {
-      const date = new Date(...payAt); // payAt arrayidan sana olish
-      return <span>{date.toLocaleDateString()}</span>;
-    },
+  },
+  {
+    title: "Check",
+    dataIndex: "ofd_url",
+    key: "ofd_url",
+    align: "center",
+    render: (_, record) => (
+      <a href={record?.ofd_url} target="_blanck">
+        <Button type="link">See check</Button>
+      </a>
+    ),
   },
   {
     title: "Method",
@@ -49,7 +67,7 @@ const columns = [
 function MonthlyTransaction() {
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
-  const { transactionMonthlyData, fetchTransactionData } =
+  const { transactionMonthlyData, fetchTransactionData, setNext, next, total } =
     useMonthlyTransaction();
 
   const handleFetch = () => {
@@ -60,14 +78,6 @@ function MonthlyTransaction() {
     }
   };
 
-  // Calculate total amount
-  const totalAmount =
-    transactionMonthlyData?.length > 0
-      ? transactionMonthlyData?.reduce(
-          (total, record) => total + record.amount,
-          0
-        )
-      : 0;
 
   return (
     <Main>
@@ -119,19 +129,7 @@ function MonthlyTransaction() {
                 </Form.Item>
               </Form>
 
-              {/* Show message if no data */}
-              {!transactionMonthlyData ||
-              transactionMonthlyData.length === 0 ? (
-                <div
-                  style={{
-                    marginBottom: "16px",
-                    padding: "20px",
-                    fontSize: "18px",
-                  }}
-                >
-                  No information found
-                </div>
-              ) : (
+              {
                 <>
                   {/* Total amount */}
                   <div
@@ -143,7 +141,7 @@ function MonthlyTransaction() {
                       padding: "0 20px",
                     }}
                   >
-                    Total Amount: {totalAmount.toLocaleString()}
+                    Total Amount: {total ? Number(total?.sum / 100).toFixed(2): "00.00"}
                   </div>
 
                   {/* Table */}
@@ -156,7 +154,20 @@ function MonthlyTransaction() {
                     />
                   </div>
                 </>
-              )}
+              }
+
+              <Space style={{ padding: "10px" }}>
+                {next > 1 ? (
+                  <Button onClick={() => setNext(next - 1)}>Previous</Button>
+                ) : (
+                  ""
+                )}
+                {transactionMonthlyData?.length >= 50 ? (
+                  <Button onClick={() => setNext(next + 1)}>Next</Button>
+                ) : (
+                  <Button disabled>Next</Button>
+                )}
+              </Space>
             </Card>
           </Col>
         </Row>

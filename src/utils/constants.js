@@ -1,4 +1,4 @@
-export const API_PATH = "http://64.226.127.111:888";
-export const API_LOGIN = 'api-login';
-export const API_PASSWORD = 'api-password';
+export const API_PATH = "https://bot.admob.uz/api/v1";
+export const API_TOKEN = 'api-token';
+
 

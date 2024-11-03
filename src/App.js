@@ -4,13 +4,13 @@ import TransactionListTable from "./pages/TransactionListTable";
 import MonthlyTransaction from "./pages/MonthlyTransaction";
 import UserIdTransaction from "./pages/UserIdTransaction";
 import UserTable from "./pages/UserTable";
-import Main from "./components/layout/Main";
 import "antd/dist/antd.css";
 import "./assets/styles/main.css";
 import "./assets/styles/responsive.css";
 import TransIdTable from "./pages/TransIdTable";
 import LoginPage from "./components/layout/Login";
 import PrivateRoute from "./utils/PrivateRoute";
+import PriceTable from "./pages/PriceTable";
 
 function App() {
   return (
@@ -35,6 +35,7 @@ function App() {
           <Route path="monthly-transactions" element={<MonthlyTransaction />} />
           <Route path="userId-transaction" element={<UserIdTransaction />} />
           <Route path="transaction-id/:id" element={<TransIdTable />} />
+          <Route path="price" element={<PriceTable />} />
         </Route>
       </Routes>
     </div>
