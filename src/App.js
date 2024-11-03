@@ -11,6 +11,7 @@ import TransIdTable from "./pages/TransIdTable";
 import LoginPage from "./components/layout/Login";
 import PrivateRoute from "./utils/PrivateRoute";
 import PriceTable from "./pages/PriceTable";
+import ChannelAdmin from "./pages/ChannelAdmin";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
           <Route path="userId-transaction" element={<UserIdTransaction />} />
           <Route path="transaction-id/:id" element={<TransIdTable />} />
           <Route path="price" element={<PriceTable />} />
+          <Route path="channel-admin" element={<ChannelAdmin />} />
         </Route>
       </Routes>
     </div>
