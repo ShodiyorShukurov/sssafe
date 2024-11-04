@@ -18,75 +18,26 @@ import { Link } from "react-router-dom";
 import Main from "../components/layout/Main";
 import Api from "../api";
 
-const { Option } = Select;
-
-const columns = [
-  {
-    title: "ID",
-    dataIndex: "id",
-    key: "id",
-    align: "center",
-  },
-  {
-    title: "Transaction Id",
-    dataIndex: "transaction_id",
-    key: "transaction_id",
-    align: "center",
-  },
-  {
-    title: "User ID",
-    dataIndex: "user_id",
-    key: "user_id",
-    align: "center",
-  },
-  {
-    title: "Amount",
-    dataIndex: "amount",
-    key: "amount",
-    align: "center",
-    render: (amount) => `${Number(amount / 100).toFixed(2)}`,
-  },
-  {
-    title: "Method",
-    dataIndex: "method",
-    key: "method",
-    align: "center",
-  },
-  {
-    title: "Success Transaction ID",
-    dataIndex: "success_trans_id",
-    key: "success_trans_id",
-    align: "center",
-  },
-  {
-    title: "Check ",
-    dataIndex: "ofd_url",
-    key: "ofd_url",
-    align: "center",
-    render: (_, record) =>
-      record.ofd_url ? (
-        <a href={record?.ofd_url} target="_blank" rel="noopener noreferrer">
-          <Button type="link">See check</Button>
-        </a>
-      ) : (
-        <span style={{ color: "red" }}>Check not available</span>
-      ),
-  },
-  {
-    title: "Actions",
-    key: "actions",
-    render: (_, record) => (
-      <Link to={"/transaction-id/" + record.id}>
-        <Button type="link">More Info</Button>
-      </Link>
-    ),
-    align: "center",
-  },
-];
 
 function TransactionListTable() {
-  const { transactionListData, setNext, next, setAddData } =
-    useTransactionList();
+  const {
+    transactionListData,
+    setNext,
+    next,
+    setAddData,
+    fetchTransactionMonthData,
+    total,
+  } = useTransactionList();
+
+  const handleFetch = (value) => {
+    console.log(value);
+    if (value) {
+      fetchTransactionMonthData(value.year, value.month);
+    } else {
+      message.warning("Please provide both month and year");
+    }
+  };
+
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [form] = Form.useForm();
 
@@ -99,26 +50,69 @@ function TransactionListTable() {
     form.resetFields();
   };
 
-  const handleAddTransaction = async (values) => {
-
-    const data = {
-      user_id: Number(values.user_id),
-      method: values.method,
-      amount: Math.round(values.amount * 100),
-      month: Number(values.month),
-    };
-
-    try {
-      await Api.post("/transaction/add", data);
-      setAddData(true);
-      message.success("Transaction added successfully!");
-      setIsModalVisible(false);
-      form.resetFields();
-    } catch (error) {
-      console.error(error);
-      message.error("Failed to add transaction.");
-    }
-  };
+  const columns = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+      align: "center",
+    },
+    {
+      title: "Transaction Id",
+      dataIndex: "transaction_id",
+      key: "transaction_id",
+      align: "center",
+    },
+    {
+      title: "User ID",
+      dataIndex: "user_id",
+      key: "user_id",
+      align: "center",
+    },
+    {
+      title: "Amount",
+      dataIndex: "amount",
+      key: "amount",
+      align: "center",
+      render: (amount) => `${Number(amount / 100).toFixed(2)}`,
+    },
+    {
+      title: "Method",
+      dataIndex: "method",
+      key: "method",
+      align: "center",
+    },
+    {
+      title: "Success Transaction ID",
+      dataIndex: "success_trans_id",
+      key: "success_trans_id",
+      align: "center",
+    },
+    {
+      title: "Check ",
+      dataIndex: "ofd_url",
+      key: "ofd_url",
+      align: "center",
+      render: (_, record) =>
+        record.ofd_url ? (
+          <a href={record?.ofd_url} target="_blank" rel="noopener noreferrer">
+            <Button type="link">See check</Button>
+          </a>
+        ) : (
+          <span style={{ color: "red" }}>Check not available</span>
+        ),
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_, record) => (
+        <Link to={"/transaction-id/" + record.id}>
+          <Button type="link">More Info</Button>
+        </Link>
+      ),
+      align: "center",
+    },
+  ];
 
   return (
     <Main>
@@ -129,12 +123,74 @@ function TransactionListTable() {
               bordered={false}
               className="criclebox tablespace mb-24"
               title="Transaction List"
-              extra={
-                <Button type="primary" onClick={showModal}>
-                  Add Transaction
-                </Button>
-              }
             >
+              <Form
+                layout="inline"
+                form={form}
+                style={{ padding: "20px" }}
+                onFinish={handleFetch}
+              >
+                <Form.Item label="Month" name="month">
+                  <select
+                    style={{
+                      width: "100%",
+                      height: "40px",
+                      border: "1px solid #d9d9d9",
+                      padding: "4px 11px",
+                      borderRadius: "6px",
+                      outline: "none",
+                    }}
+                  >
+                    <option>Select Month</option>
+                    <option value="01">January</option>
+                    <option value="02">February</option>
+                    <option value="03">March</option>
+                    <option value="04">April</option>
+                    <option value="05">May</option>
+                    <option value="06">June</option>
+                    <option value="07">July</option>
+                    <option value="08">August</option>
+                    <option value="09">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                  </select>
+                </Form.Item>
+
+                <Form.Item label="Year" name="year">
+                  <Input
+                    type="number"
+                    placeholder="YYYY"
+                    maxLength={4}
+                    min={1000}
+                    max={9999}
+                    style={{ width: 100 }}
+                  />
+                </Form.Item>
+
+                <Form.Item>
+                  <Button type="primary" htmlType="submit">
+                    Search
+                  </Button>
+                </Form.Item>
+              </Form>
+
+              {total ? (
+                <div
+                  style={{
+                    marginBottom: "16px",
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    color: "#14A44D",
+                    padding: "0 20px",
+                  }}
+                >
+                  Total Amount: {Number(total?.sum / 100).toFixed(2)}
+                </div>
+              ) : (
+                " "
+              )}
+
               <div className="table-responsive">
                 <Table
                   columns={columns}
@@ -158,67 +214,6 @@ function TransactionListTable() {
             </Card>
           </Col>
         </Row>
-
-        {/* Modal for Adding Transaction */}
-        <Modal
-          title="Add Transaction"
-          open={isModalVisible}
-          onCancel={handleCancel}
-          footer={null}
-        >
-          <Form form={form} layout="vertical" onFinish={handleAddTransaction}>
-            <Form.Item
-              name="user_id"
-              label="User Id"
-              rules={[{ required: true, message: "Please input User Id!" }]}
-            >
-              <Input placeholder="Enter User Id" />
-            </Form.Item>
-
-            <Form.Item
-              name="method"
-              label="Method"
-              rules={[{ required: true, message: "Please input Method!" }]}
-            >
-              <Select placeholder="Please input Method">
-                <Option value="ADMIN">Admin</Option>
-                <Option value="CASH">Cash</Option>
-              </Select>
-            </Form.Item>
-
-            <Form.Item
-              name="amount"
-              label="Amount (The value before the point is the amount, and the value after the point is the penny.)"
-              rules={[{ required: true, message: "Please input Amount!" }]}
-            >
-              <InputNumber
-                placeholder="Enter Amount"
-                style={{ width: "100%" }}
-                min={0}
-                formatter={(value) => `${parseFloat(value || 0).toFixed(2)}`}
-                parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
-              />
-            </Form.Item>
-
-            <Form.Item
-              name="month"
-              label="Month"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input Month!",
-                },
-              ]}
-            >
-              <Input type="number" placeholder="Enter Month" />
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit" block>
-                Add Transaction
-              </Button>
-            </Form.Item>
-          </Form>
-        </Modal>
       </div>
     </Main>
   );

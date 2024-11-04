@@ -12,6 +12,7 @@ import {
   Upload,
   Form,
   Select,
+  InputNumber,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -40,6 +41,11 @@ function UsersListTable() {
     setIsModalVisible(true);
   };
 
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    form.resetFields();
+  };
+
   const handleSendMessage = async (values) => {
     setIsLoading(true);
     const formData = new FormData();
@@ -63,7 +69,6 @@ function UsersListTable() {
   };
 
   /* SEND MESSAGE TO USERS*/
-
   const handleSendMessageUsers = async (values) => {
     setIsLoading(true);
     const formData = new FormData();
@@ -100,15 +105,53 @@ function UsersListTable() {
     setFileList(newFileList);
   };
 
-   const beforeUpload = (file) => {
-     const isImageOrVideo =
-       file.type.startsWith("image/") || file.type.startsWith("video/");
-     if (!isImageOrVideo) {
-       message.error("Faqat rasm yoki video yuklash mumkin!");
-       return Upload.LIST_IGNORE;
-     }
-     return false; // file avtomatik yuklanmasligi uchun
-   };
+  const beforeUpload = (file) => {
+    const isImageOrVideo =
+      file.type.startsWith("image/") || file.type.startsWith("video/");
+    if (!isImageOrVideo) {
+      message.error("Faqat rasm yoki video yuklash mumkin!");
+      return Upload.LIST_IGNORE;
+    }
+    return false;
+  };
+
+  /* Add transaction*/
+
+  const [isTransactionModalVisible, setIsTransactionModalVisible] =
+    React.useState(false);
+
+  const showTransactionModal = (record) => {
+    setSelectedUser(record);
+    setIsTransactionModalVisible(true);
+  };
+
+  const handleTransactionCancel = () => {
+    setIsTransactionModalVisible(false);
+    form.resetFields();
+  };
+
+  const handleAddTransaction = async (values) => {
+    const data = {
+      user_id: Number(selectedUser?.chat_id),
+      method: values.method,
+      amount: Math.round(values.amount * 100),
+      month: Number(values.month),
+    };
+
+    try {
+      const res = await Api.post("/transaction/add", data);
+
+      if (res.data) {
+        message.success("Transaction added successfully!");
+        handleTransactionCancel();
+        form.resetFields();
+        setSelectedUser(null);
+      }
+    } catch (error) {
+      console.error(error);
+      message.error("Failed to add transaction.");
+    }
+  };
 
   const columns = [
     {
@@ -118,7 +161,7 @@ function UsersListTable() {
       align: "center",
     },
     {
-      title: "Chat Id",
+      title: "User Id",
       dataIndex: "chat_id",
       key: "chat_id",
       align: "center",
@@ -209,6 +252,9 @@ function UsersListTable() {
           <Button type="link" onClick={() => openMessageModal(record)}>
             Send message
           </Button>
+          <Button type="link" onClick={() => showTransactionModal(record)}>
+            Add access
+          </Button>
         </Space>
       ),
       align: "center",
@@ -293,7 +339,7 @@ function UsersListTable() {
         <Modal
           title="Send Message"
           open={isModalVisible}
-          onCancel={() => setIsModalVisible(false)}
+          onCancel={handleCancel}
           footer={null}
         >
           <Form
@@ -358,6 +404,60 @@ function UsersListTable() {
                 disabled={isLoading}
               >
                 Send Message
+              </Button>
+            </Form.Item>
+          </Form>
+        </Modal>
+
+        {/*Transaction modal*/}
+
+        <Modal
+          title="Add Transaction"
+          open={isTransactionModalVisible}
+          onCancel={handleTransactionCancel}
+          footer={null}
+        >
+          <Form form={form} layout="vertical" onFinish={handleAddTransaction}>
+            <Form.Item
+              name="method"
+              label="Method"
+              rules={[{ required: true, message: "Please input Method!" }]}
+            >
+              <Select placeholder="Please input Method">
+                <Option value="ADMIN">Admin</Option>
+                <Option value="CASH">Cash</Option>
+              </Select>
+            </Form.Item>
+
+            <Form.Item
+              name="amount"
+              label="Amount (The value before the point is the amount, and the value after the point is the penny.)"
+              rules={[{ required: true, message: "Please input Amount!" }]}
+            >
+              <InputNumber
+                placeholder="Enter Amount"
+                style={{ width: "100%" }}
+                min={0}
+                formatter={(value) => `${parseFloat(value || 0).toFixed(2)}`}
+                parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="month"
+              label="Month"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input Month!",
+                },
+              ]}
+            >
+              <Input type="number" placeholder="Enter Month" min={0} />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" block>
+                Add Transaction
               </Button>
             </Form.Item>
           </Form>

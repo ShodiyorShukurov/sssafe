@@ -1,8 +1,6 @@
 import { Route, Routes, Navigate } from "react-router-dom";
 import UsersListTable from "./pages/UsersListTable";
 import TransactionListTable from "./pages/TransactionListTable";
-import MonthlyTransaction from "./pages/MonthlyTransaction";
-import UserIdTransaction from "./pages/UserIdTransaction";
 import UserTable from "./pages/UserTable";
 import "antd/dist/antd.css";
 import "./assets/styles/main.css";
@@ -33,8 +31,6 @@ function App() {
           <Route path="user-list" element={<UsersListTable />} />
           <Route path="transaction-list" element={<TransactionListTable />} />
           <Route path="user-list/:id" element={<UserTable />} />
-          <Route path="monthly-transactions" element={<MonthlyTransaction />} />
-          <Route path="userId-transaction" element={<UserIdTransaction />} />
           <Route path="transaction-id/:id" element={<TransIdTable />} />
           <Route path="price" element={<PriceTable />} />
           <Route path="channel-admin" element={<ChannelAdmin />} />
