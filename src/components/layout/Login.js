@@ -6,7 +6,7 @@ import { API_TOKEN } from "../../utils/constants";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [form] = Form.useForm(); // Ant Design form hook
+  const [form] = Form.useForm(); 
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (values) => {
@@ -15,7 +15,12 @@ const LoginPage = () => {
         admin_email: values.admin_email,
         admin_password: values.admin_password,
       });
-      if (res.data.token) {
+      if(res.data.status === 404){
+        notification.error({
+          message: "Error",
+          description: "Login yoki parol noto'g'ri",
+        });
+      }else if (res.data.token) {
         localStorage.setItem(API_TOKEN, res.data.token);
         navigate('/user-list')
       }

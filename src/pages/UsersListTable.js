@@ -100,6 +100,16 @@ function UsersListTable() {
     setFileList(newFileList);
   };
 
+   const beforeUpload = (file) => {
+     const isImageOrVideo =
+       file.type.startsWith("image/") || file.type.startsWith("video/");
+     if (!isImageOrVideo) {
+       message.error("Faqat rasm yoki video yuklash mumkin!");
+       return Upload.LIST_IGNORE;
+     }
+     return false; // file avtomatik yuklanmasligi uchun
+   };
+
   const columns = [
     {
       title: "ID",
@@ -305,19 +315,14 @@ function UsersListTable() {
               />
             </Form.Item>
 
-            <Form.Item
-              name="photo"
-              label="Photo"
-              rules={[{ required: true, message: "Please upload a picture" }]}
-            >
+            <Form.Item name="photo" label="Photo or video">
               <Upload
                 fileList={fileList}
-                beforeUpload={() => false}
+                beforeUpload={beforeUpload}
                 onChange={handleUploadChange}
-                listType="picture"
                 maxCount={1}
               >
-                <Button icon={<UploadOutlined />}>Select Image</Button>
+                <Button icon={<UploadOutlined />}>Select Image or Video</Button>
               </Upload>
             </Form.Item>
 
