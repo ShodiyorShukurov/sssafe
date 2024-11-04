@@ -1,10 +1,10 @@
-import { Row, Col, Card, Table, Button, Modal } from "antd";
+import { Row, Col, Card, Table, Button } from "antd";
 import { useParams } from "react-router-dom";
 import React, { useState } from "react";
 import Api from "../api";
 import Main from "../components/layout/Main";
 
-const columns = (showImage) => [
+const columns = [
   {
     title: "ID",
     dataIndex: "id",
@@ -12,15 +12,21 @@ const columns = (showImage) => [
     align: "center",
   },
   {
-    title: "Trans ID",
-    dataIndex: "transId",
-    key: "transId",
+    title: "Transaction Id",
+    dataIndex: "transaction_id",
+    key: "transaction_id",
     align: "center",
+    render: (transaction_id) =>
+      transaction_id ? (
+        { transaction_id }
+      ) : (
+        <span style={{ color: "red" }}>Not found</span>
+      ),
   },
   {
     title: "User ID",
-    dataIndex: "userId",
-    key: "userId",
+    dataIndex: "user_id",
+    key: "user_id",
     align: "center",
   },
   {
@@ -28,17 +34,7 @@ const columns = (showImage) => [
     dataIndex: "amount",
     key: "amount",
     align: "center",
-    render: (amount) => `${amount.toFixed(2)}`, // 2 ondalik raqam bilan ko'rsatish
-  },
-  {
-    title: "Pay At",
-    dataIndex: "payAt",
-    key: "payAt",
-    align: "center",
-    render: (payAt) => {
-      const date = new Date(...payAt); // payAt arrayidan sana olish
-      return <span>{date.toLocaleDateString()}</span>;
-    },
+    render: (amount) => `${Number(amount / 100).toFixed(2)}`,
   },
   {
     title: "Method",
@@ -48,48 +44,41 @@ const columns = (showImage) => [
   },
   {
     title: "Success Transaction ID",
-    dataIndex: "successTransId",
-    key: "successTransId",
+    dataIndex: "success_trans_id",
+    key: "success_trans_id",
     align: "center",
+    render: (success_trans_id) =>
+      success_trans_id ? (
+        { success_trans_id }
+      ) : (
+        <span style={{ color: "red" }}>Not found</span>
+      ),
   },
   {
-    title: "Actions",
-    key: "actions",
+    title: "Check ",
+    dataIndex: "ofd_url",
+    key: "ofd_url",
     align: "center",
     render: (_, record) =>
-      record.method === "CARD" ? (
-        <Button type="link" onClick={() => showImage()}>
-          see the picture
-        </Button>
-      ) : null,
+      record.ofd_url ? (
+        <a href={record?.ofd_url} target="_blank" rel="noopener noreferrer">
+          <Button type="link">See check</Button>
+        </a>
+      ) : (
+        <span style={{ color: "red" }}>Check not available</span>
+      ),
   },
 ];
 
 function TransIdTable() {
   const { id } = useParams();
   const [transIdData, setTransIdData] = useState();
-  const [visible, setVisible] = useState(false);
-  const [imageUrl, setImageUrl] = useState("");
 
-
-const fetchImgData = async (transId) => {
-  try {
-    const res = await Api.get(`/transaction/photo/${transId}`, {
-      responseType: "blob", 
-    });
-    const imageUrl = URL.createObjectURL(res.data); 
-    setImageUrl(imageUrl); 
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
-};
 
   const fetchTransData = async () => {
     try {
-      const res = await Api.get(`/transaction/read/${id}`);
-      setTransIdData(res.data);
-      if (res.data.method === "CARD") fetchImgData(res.data.transId)
+      const res = await Api.get(`/transaction/${id}`);
+      setTransIdData(res.data.data);
     } catch (error) {
       console.error(error);
       throw error;
@@ -98,22 +87,12 @@ const fetchImgData = async (transId) => {
 
   React.useEffect(() => {
     fetchTransData();
-  }, []);
+  }, [id]);
 
   if (!transIdData) {
     return <Main>Transaction not found</Main>;
   }
 
-
-    const showImage = () => {
-      setVisible(true);
-    };
-
-
-  // Modalni yopish
-  const handleCancel = () => {
-    setVisible(false);
-  };
 
   return (
     <Main>
@@ -127,7 +106,7 @@ const fetchImgData = async (transId) => {
             >
               <div className="table-responsive">
                 <Table
-                  columns={columns(showImage)}
+                  columns={columns}
                   dataSource={[transIdData]}
                   pagination={false}
                   className="ant-border-space"
@@ -136,16 +115,6 @@ const fetchImgData = async (transId) => {
             </Card>
           </Col>
         </Row>
-
-        {/* Rasm ko'rsatish uchun modal */}
-        <Modal
-          title="Foydalanuvchi Rasm"
-          open={visible}
-          onCancel={handleCancel}
-          footer={null}
-        >
-          <img alt="User" style={{ width: "200px" }} src={imageUrl} />
-        </Modal>
       </div>
     </Main>
   );

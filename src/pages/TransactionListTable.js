@@ -69,7 +69,7 @@ const columns = [
           <Button type="link">See check</Button>
         </a>
       ) : (
-        "Check not available"
+        <span style={{ color: "red" }}>Check not available</span>
       ),
   },
   {
@@ -162,7 +162,7 @@ function TransactionListTable() {
         {/* Modal for Adding Transaction */}
         <Modal
           title="Add Transaction"
-          visible={isModalVisible}
+          open={isModalVisible}
           onCancel={handleCancel}
           footer={null}
         >
