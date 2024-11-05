@@ -92,7 +92,7 @@ function Sidenav({ color }) {
             <span
               className="icon"
               style={{
-                background: page === "user-list" ? color : "",
+                background: page === "dashboard" ? color : "",
               }}
             >
               {dashboard}

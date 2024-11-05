@@ -24,7 +24,7 @@ const LoginPage = () => {
         });
       } else if (res.data.token) {
         localStorage.setItem(API_TOKEN, res.data.token);
-        navigate("/user-list");
+        navigate("/dashboard");
       }
       setLoading(false);
     } catch (error) {

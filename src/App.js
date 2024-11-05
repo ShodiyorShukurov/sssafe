@@ -10,6 +10,7 @@ import LoginPage from "./components/layout/Login";
 import PrivateRoute from "./utils/PrivateRoute";
 import PriceTable from "./pages/PriceTable";
 import ChannelAdmin from "./pages/ChannelAdmin";
+import Home from "./pages/Home";
 
 function App() {
   return (
@@ -22,12 +23,8 @@ function App() {
         <Route path="/" element={<Navigate to="/login" />} />
 
         {/* Private route logic for protecting routes */}
-        <Route
-          path="/"
-          element={
-            <PrivateRoute/>
-          }
-        >
+        <Route path="/" element={<PrivateRoute />}>
+          <Route path="dashboard" element={<Home />} />
           <Route path="user-list" element={<UsersListTable />} />
           <Route path="transaction-list" element={<TransactionListTable />} />
           <Route path="user-list/:id" element={<UserTable />} />
