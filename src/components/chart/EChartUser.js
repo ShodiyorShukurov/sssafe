@@ -1,25 +1,19 @@
 import ReactApexChart from "react-apexcharts";
-import { Row, Col, Typography } from "antd";
+import { Typography } from "antd";
 import useDashboard from "../../hooks/UseDashboard";
 // import eChart from "./configs/eChart";
 
-function EChart() {
-  const { Title, Paragraph } = Typography;
-  const { monthStatistics } = useDashboard();
-
-  console.log(monthStatistics);
+function EChartUser() {
+  const { Title } = Typography;
+  const { userStatisticsMonth } = useDashboard();
 
   const eChart = {
     series: [
       {
         name: "Sales",
-        data:
-          monthStatistics
-          ? monthStatistics.map((total) =>
-              Number(total.total_amount / 100).toFixed(2)
-            )
-          :
-          [],
+        data: userStatisticsMonth
+          ? userStatisticsMonth.map((total) => Number(total.user_count))
+          : [],
         color: "#fff",
       },
     ],
@@ -55,8 +49,8 @@ function EChart() {
         strokeDashArray: 2,
       },
       xaxis: {
-        categories: monthStatistics
-          ? monthStatistics.map((month) => month.month.slice(0, 3))
+        categories: userStatisticsMonth
+          ? userStatisticsMonth.map((month) => month.month.slice(0, 3))
           : [],
 
         labels: {
@@ -110,34 +104,17 @@ function EChart() {
       tooltip: {
         y: {
           formatter: function (val) {
-            return "" + val + " so'm";
+            return val;
           },
         },
       },
     },
   };
 
-  const items = [
-    {
-      Title: "3,6K",
-      user: "Users",
-    },
-    {
-      Title: "2m",
-      user: "Clicks",
-    },
-    {
-      Title: "$772",
-      user: "Sales",
-    },
-    {
-      Title: "82",
-      user: "Items",
-    },
-  ];
-
   return (
     <>
+      <Title level={5}>Users statistics</Title>
+
       <div id="chart">
         <ReactApexChart
           className="bar-chart"
@@ -147,28 +124,8 @@ function EChart() {
           height={220}
         />
       </div>
-      <div className="chart-vistior">
-        <Title level={5}>Active Users</Title>
-        <Paragraph className="lastweek">
-          than last week <span className="bnb2">+30%</span>
-        </Paragraph>
-        <Paragraph className="lastweek">
-          We have created multiple options for you to put together and customise
-          into pixel perfect pages.
-        </Paragraph>
-        <Row gutter>
-          {items.map((v, index) => (
-            <Col xs={6} xl={6} sm={6} md={6} key={index}>
-              <div className="chart-visitor-count">
-                <Title level={4}>{v.Title}</Title>
-                <span>{v.user}</span>
-              </div>
-            </Col>
-          ))}
-        </Row>
-      </div>
     </>
   );
 }
 
-export default EChart;
+export default EChartUser;

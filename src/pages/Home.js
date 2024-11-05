@@ -8,14 +8,18 @@ import {
 } from "antd";
 
 
-import Echart from "../components/chart/EChart";
+import EChartTransaction from "../components/chart/EChartTransaction";
 import LineChart from "../components/chart/LineChart";
 import Main from "../components/layout/Main";
+import useDashboard from "../hooks/UseDashboard";
+import EChartUser from "../components/chart/EChartUser";
 
 
 
 function Home() {
   const { Title } = Typography;
+
+  const { userStatistics, userStatisticsSource } = useDashboard();
 
 
   const dollor = [
@@ -43,6 +47,7 @@ function Home() {
       ></path>
     </svg>,
   ];
+
   const profile = [
     <svg
       width="22"
@@ -70,6 +75,7 @@ function Home() {
       ></path>
     </svg>,
   ];
+
   const heart = [
     <svg
       width="22"
@@ -104,35 +110,47 @@ function Home() {
       ></path>
     </svg>,
   ];
+
   const count = [
     {
-      today: "Today’s Sales",
-      title: "$53,000",
-      persent: "+30%",
-      icon: dollor,
-      bnb: "bnb2",
-    },
-    {
-      today: "Today’s Users",
-      title: "3,200",
-      persent: "+20%",
+      today: "All Users",
+      title: userStatistics?.all_user,
       icon: profile,
       bnb: "bnb2",
     },
     {
-      today: "New Clients",
-      title: "+1,200",
-      persent: "-20%",
-      icon: heart,
-      bnb: "redtext",
-    },
-    {
-      today: "New Orders",
-      title: "$13,200",
-      persent: "10%",
-      icon: cart,
+      today: "Bot Members",
+      title: userStatistics?.bot_members,
+      icon: profile,
       bnb: "bnb2",
     },
+    {
+      today: "Payet Users",
+      title: userStatistics?.payed_user,
+      icon: profile,
+      bnb: "bnb2",
+    },
+    // {
+    //   today: "Today’s Sales",
+    //   title: "$53,000",
+    //   persent: "+30%",
+    //   icon: dollor,
+    //   bnb: "bnb2",
+    // },
+    // {
+    //   today: "New Clients",
+    //   title: "+1,200",
+    //   persent: "-20%",
+    //   icon: heart,
+    //   bnb: "redtext",
+    // },
+    // {
+    //   today: "New Orders",
+    //   title: "$13,200",
+    //   persent: "10%",
+    //   icon: cart,
+    //   bnb: "bnb2",
+    // },
   ];
 
 
@@ -173,12 +191,12 @@ function Home() {
         <Row gutter={[24, 0]}>
           <Col xs={24} sm={24} md={12} lg={12} xl={10} className="mb-24">
             <Card bordered={false} className="criclebox h-full">
-              <Echart />
+              <EChartTransaction />
             </Card>
           </Col>
-          <Col xs={24} sm={24} md={12} lg={12} xl={14} className="mb-24">
+          <Col xs={24} sm={24} md={12} lg={12} xl={10} className="mb-24">
             <Card bordered={false} className="criclebox h-full">
-              <LineChart />
+              <EChartUser />
             </Card>
           </Col>
         </Row>

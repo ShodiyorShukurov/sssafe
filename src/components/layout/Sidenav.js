@@ -101,7 +101,7 @@ function Sidenav({ color }) {
           </NavLink>
         </Menu.Item>
 
-        <Menu.Item key="1">
+        <Menu.Item key="2">
           <NavLink to="/user-list">
             <span
               className="icon"
@@ -115,7 +115,7 @@ function Sidenav({ color }) {
           </NavLink>
         </Menu.Item>
 
-        <Menu.Item key="2">
+        <Menu.Item key="3">
           <NavLink to="/transaction-list">
             <span
               className="icon"
@@ -129,7 +129,7 @@ function Sidenav({ color }) {
           </NavLink>
         </Menu.Item>
 
-        <Menu.Item key="5">
+        <Menu.Item key="4">
           <NavLink to="/price">
             <span
               className="icon"
@@ -143,7 +143,7 @@ function Sidenav({ color }) {
           </NavLink>
         </Menu.Item>
 
-        <Menu.Item key="6">
+        <Menu.Item key="5">
           <NavLink to="/channel-admin">
             <span
               className="icon"
