@@ -6,6 +6,13 @@ const useTransactionList = () => {
   const [next, setNext] = React.useState(1);
   const [addData, setAddData] = React.useState(false);
   const [total, setTotal] = React.useState();
+  const [isModalUserInfo, setIsModalUserInfo] = React.useState(false);
+  const [selectedUser, setSelectedUser] = React.useState(null);
+
+  const showUserInfoModal = (record) => {
+    setSelectedUser(record);
+    setIsModalUserInfo(true);
+  };
 
   const fetchTransactionData = async () => {
     try {
@@ -18,7 +25,7 @@ const useTransactionList = () => {
   };
 
   const fetchTransactionMonthData = async (year, month) => {
-    if(!month) return; 
+    if (!month) return;
     try {
       const res = await Api.get(
         `/transactions/filter?limit=50&page=${next}&month=${month}&year=${year}`
@@ -27,13 +34,15 @@ const useTransactionList = () => {
       setTotal(res.data.total);
     } catch (error) {
       console.log(error);
-      throw error;
+      if (error.message === "Request failed with status code 404") {
+        setTransactionListData([]);
+      }
     }
   };
 
   React.useEffect(() => {
     fetchTransactionData();
-    fetchTransactionMonthData()
+    fetchTransactionMonthData();
   }, [next, addData]);
 
   return {
@@ -43,6 +52,11 @@ const useTransactionList = () => {
     setAddData,
     total,
     fetchTransactionMonthData,
+    showUserInfoModal,
+    isModalUserInfo,
+    setIsModalUserInfo,
+    selectedUser,
+    setSelectedUser,
   };
 };
 

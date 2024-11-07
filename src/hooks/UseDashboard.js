@@ -30,8 +30,8 @@ const useDashboard = () => {
 
   const getUserStatisticsMonthData = async () => {
     try {
-      const res = await Api.get("/users/statistics/increase");
-      setUserStatisticsMonth(res.data.data);
+      const res = await Api.get("/transactions/statistics/increase");
+      console.log(res.data.data);
     } catch (error) {
       console.log(error);
       throw error;

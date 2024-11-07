@@ -199,6 +199,11 @@ function Home() {
               <EChartUser />
             </Card>
           </Col>
+          <Col xs={24} sm={24} md={12} lg={12} xl={10} className="mb-24">
+            <Card bordered={false} className="criclebox h-full">
+              <LineChart />
+            </Card>
+          </Col>
         </Row>
       </div>
     </Main>

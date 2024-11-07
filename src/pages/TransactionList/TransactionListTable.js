@@ -1,118 +1,33 @@
 import React from "react";
-import {
-  Row,
-  Col,
-  Card,
-  Table,
-  Button,
-  Space,
-  Modal,
-  Input,
-  Form,
-  message,
-  Select,
-  InputNumber,
-} from "antd";
-import useTransactionList from "../hooks/UseTransactionList";
-import { Link } from "react-router-dom";
-import Main from "../components/layout/Main";
-import Api from "../api";
-
+import { Row, Col, Card, Button, Space, Input, Form, message } from "antd";
+import useTransactionList from "../../hooks/UseTransactionList";
+import Main from "../../components/layout/Main";
+import TransactionData from "./data/TransactionData";
+import MoreInfoModal from "./components/MoreInfoModal";
 
 function TransactionListTable() {
   const {
     transactionListData,
     setNext,
     next,
-    setAddData,
     fetchTransactionMonthData,
     total,
+    showUserInfoModal,
+    isModalUserInfo,
+    setIsModalUserInfo,
+    selectedUser,
+    setSelectedUser,
   } = useTransactionList();
 
+  const [form] = Form.useForm();
+
   const handleFetch = (value) => {
-    console.log(value);
-    if (value) {
+    if (value.month && value.year) {
       fetchTransactionMonthData(value.year, value.month);
     } else {
       message.warning("Please provide both month and year");
     }
   };
-
-  const [isModalVisible, setIsModalVisible] = React.useState(false);
-  const [form] = Form.useForm();
-
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-    form.resetFields();
-  };
-
-  const columns = [
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-      align: "center",
-    },
-    {
-      title: "Transaction Id",
-      dataIndex: "transaction_id",
-      key: "transaction_id",
-      align: "center",
-    },
-    {
-      title: "User ID",
-      dataIndex: "user_id",
-      key: "user_id",
-      align: "center",
-    },
-    {
-      title: "Amount",
-      dataIndex: "amount",
-      key: "amount",
-      align: "center",
-      render: (amount) => `${Number(amount / 100).toFixed(2)}`,
-    },
-    {
-      title: "Method",
-      dataIndex: "method",
-      key: "method",
-      align: "center",
-    },
-    {
-      title: "Success Transaction ID",
-      dataIndex: "success_trans_id",
-      key: "success_trans_id",
-      align: "center",
-    },
-    {
-      title: "Check ",
-      dataIndex: "ofd_url",
-      key: "ofd_url",
-      align: "center",
-      render: (_, record) =>
-        record.ofd_url ? (
-          <a href={record?.ofd_url} target="_blank" rel="noopener noreferrer">
-            <Button type="link">See check</Button>
-          </a>
-        ) : (
-          <span style={{ color: "red" }}>Check not available</span>
-        ),
-    },
-    {
-      title: "Actions",
-      key: "actions",
-      render: (_, record) => (
-        <Link to={"/transaction-id/" + record.id}>
-          <Button type="link">More Info</Button>
-        </Link>
-      ),
-      align: "center",
-    },
-  ];
 
   return (
     <Main>
@@ -125,8 +40,8 @@ function TransactionListTable() {
               title="Transaction List"
             >
               <Form
-                layout="inline"
                 form={form}
+                layout="inline"
                 style={{ padding: "20px" }}
                 onFinish={handleFetch}
               >
@@ -192,11 +107,9 @@ function TransactionListTable() {
               )}
 
               <div className="table-responsive">
-                <Table
-                  columns={columns}
-                  dataSource={transactionListData}
-                  pagination={false}
-                  className="ant-border-space"
+                <TransactionData
+                  transactionListData={transactionListData}
+                  showUserInfoModal={showUserInfoModal}
                 />
               </div>
               <Space style={{ padding: "10px" }}>
@@ -215,6 +128,13 @@ function TransactionListTable() {
           </Col>
         </Row>
       </div>
+
+      <MoreInfoModal
+        isModalUserInfo={isModalUserInfo}
+        setIsModalUserInfo={setIsModalUserInfo}
+        selectedUser={selectedUser}
+        setSelectedUser={setSelectedUser}
+      />
     </Main>
   );
 }

@@ -7,6 +7,7 @@ function EChartUser() {
   const { Title } = Typography;
   const { userStatisticsMonth } = useDashboard();
 
+  console.log(userStatisticsMonth)
   const eChart = {
     series: [
       {
