@@ -1,11 +1,9 @@
 import { Menu } from "antd";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
+import { data } from "../../mock/data";
 
-function Sidenav({ color }) {
-  const { pathname } = useLocation();
-  const page = pathname.replace("/", "");
-
+function Sidenav() {
   const user = [
     <svg
       width="20"
@@ -22,22 +20,14 @@ function Sidenav({ color }) {
     <>
       <div className="brand">
         <img src={logo} alt="" />
-        <span>Admin Panel</span>
+        <span>{data.sideNav.title}</span>
       </div>
       <hr />
       <Menu theme="light" mode="inline">
-
-        <Menu.Item key="2">
+        <Menu.Item key="1">
           <NavLink to="/user-list">
-            <span
-              className="icon"
-              style={{
-                background: page === "user-list" ? color : "",
-              }}
-            >
-              {user}
-            </span>
-            <span className="label">Users List</span>
+            <span className="icon" style={{width: "100px"}}>{user}</span>
+            <span className="label">{data.sideNav.pathName}</span>
           </NavLink>
         </Menu.Item>
       </Menu>

@@ -3,14 +3,11 @@ import { Row, Col, Card, Button, Space, Input, message } from "antd";
 import useUserList from "../../hooks/UseUserList";
 import Main from "../../components/layout/Main";
 import UserData from "./data/UserData";
+import { data } from "../../mock/data";
 
 function UsersListTable() {
-  const {
-    userListData,
-    next,
-    setNext,
-    fetchUserPhoneNumberData,
-  } = useUserList();
+  const { userListData, next, setNext, fetchUserPhoneNumberData } =
+    useUserList();
 
   const [phoneNumber, setPhoneNumber] = React.useState();
 
@@ -33,7 +30,7 @@ function UsersListTable() {
             <Card
               bordered={false}
               className="criclebox tablespace mb-24"
-              title="User List"
+              title={data.userListPage.title}
             >
               <div
                 style={{
@@ -45,7 +42,7 @@ function UsersListTable() {
               >
                 <div>
                   <Input
-                    placeholder="Phone Number"
+                    placeholder={data.userListPage.input_placeholder}
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                     onPressEnter={onSearch}
@@ -61,30 +58,28 @@ function UsersListTable() {
                     type="primary"
                     style={{ marginLeft: "10px" }}
                   >
-                    Search
+                    {data.userListPage.form_button_text}
                   </Button>
                 </div>
               </div>
 
               <div className="table-responsive">
-                <UserData
-                  userListData={userListData}
-                />
+                <UserData userListData={userListData} />
               </div>
               <Space style={{ padding: "10px" }}>
                 {next > 1 && (
                   <Button className="me-4" onClick={() => setNext(next - 1)}>
-                    Previous
+                    {data.userListPage.button_previous}
                   </Button>
                 )}
 
                 {userListData?.length >= 50 ? (
                   <Button color="dark" onClick={() => setNext(next + 1)}>
-                    Next
+                    {data.userListPage.button_next}
                   </Button>
                 ) : (
                   <Button variant="text" color="dark" disabled>
-                    Next
+                    {data.userListPage.button_next}
                   </Button>
                 )}
               </Space>
