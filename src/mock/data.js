@@ -1,3 +1,16 @@
+const login = {
+  title: "Логин",
+  label_1: "Логин",
+  input_placeholder_1: "Логин",
+  label_2: "Пароль",
+  input_message_1: "Введите логин",
+  input_message_2: "Введите пароль",
+  input_placeholder_2: "Пароль",
+  button_text: "Войти",
+  button_loading_text: "Загрузка...",
+  error_text: "Неверный логин или пароль",
+};
+
 const header = {
   pages: "Страницы",
   name: "Список пользователей",
@@ -32,4 +45,4 @@ const userListPageTable = {
   create: "Дата создания",
 };
 
-export const data = { sideNav, userListPage, userListPageTable, header };
+export const data = { sideNav, userListPage, userListPageTable, header, login };
