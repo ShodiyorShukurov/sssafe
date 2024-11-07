@@ -13,8 +13,8 @@ const LoginPage = () => {
     setLoading(true);
     try {
       const res = await Api.post("/admin/login", {
-        admin_email: values.admin_email,
-        admin_password: values.admin_password,
+        admin_email: values.admin_email.trim(),
+        admin_password: values.admin_password.trim(),
       });
 
       if (res.data.status === 401) {
@@ -24,7 +24,7 @@ const LoginPage = () => {
         });
       } else if (res.data.token) {
         localStorage.setItem(API_TOKEN, res.data.token);
-        navigate("/dashboard");
+        navigate("/user-list");
       }
       setLoading(false);
     } catch (error) {
